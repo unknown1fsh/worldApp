@@ -1,0 +1,368 @@
+{
+	"info": {
+		"_postman_id": "83f1fe3f-a49a-477c-bd34-ae0ca731a5f0",
+		"name": "WorldApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3798074"
+	},
+	"item": [
+		{
+			"name": "Cities",
+			"item": [
+				{
+					"name": "Cities - List All",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Başarılı istekleri doğrulama\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// POST ve PUT isteklerinde 201 veya 200 döndüğünü kontrol etme\r",
+									"pm.test(\"Status code is 201 or 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});\r",
+									"\r",
+									"// DELETE isteğinde 204 döndüğünü kontrol etme\r",
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/cities?ID=1811",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"cities"
+							],
+							"query": [
+								{
+									"key": "ID",
+									"value": "1811"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cities - Create New",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ID\": 1,\r\n  \"Name\": \"Ankara\",\r\n  \"CountryCode\": \"TUR\",\r\n  \"District\": \"Ankara\",\r\n  \"Population\": 5000000\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/cities",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cities - Update Existing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"ID\": 1,\r\n  \"Name\": \"Istanbul\",\r\n  \"CountryCode\": \"TUR\",\r\n  \"District\": \"Istanbul\",\r\n  \"Population\": 15000000\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/cities",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cities - Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/cities?ID=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"cities"
+							],
+							"query": [
+								{
+									"key": "ID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "Countries - List All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/countries",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries - Create New",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Code\": \"TUR\",\r\n  \"Name\": \"Turkey\",\r\n  \"Continent\": \"Asia\",\r\n  \"Region\": \"Middle East\",\r\n  \"SurfaceArea\": 783356,\r\n  \"IndepYear\": 1923,\r\n  \"Population\": 82000000,\r\n  \"LifeExpectancy\": 75.8,\r\n  \"GNP\": 851300.0,\r\n  \"GNPOld\": 800000.0,\r\n  \"LocalName\": \"Türkiye\",\r\n  \"GovernmentForm\": \"Republic\",\r\n  \"HeadOfState\": \"Recep Tayyip Erdoğan\",\r\n  \"Capital\": 1,\r\n  \"Code2\": \"TR\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/countries",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries - Update Existing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Code\": \"TUR\",\r\n  \"Name\": \"Republic of Turkey\",\r\n  \"Continent\": \"Asia\",\r\n  \"Region\": \"Middle East\",\r\n  \"SurfaceArea\": 783356,\r\n  \"IndepYear\": 1923,\r\n  \"Population\": 82000000,\r\n  \"LifeExpectancy\": 75.8,\r\n  \"GNP\": 851300.0,\r\n  \"GNPOld\": 800000.0,\r\n  \"LocalName\": \"Türkiye\",\r\n  \"GovernmentForm\": \"Republic\",\r\n  \"HeadOfState\": \"Recep Tayyip Erdoğan\",\r\n  \"Capital\": 1,\r\n  \"Code2\": \"TR\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/countries",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Countries - Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/countries?Code=TUR",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countries"
+							],
+							"query": [
+								{
+									"key": "Code",
+									"value": "TUR"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CountryLanguages",
+			"item": [
+				{
+					"name": "CountryLanguages - List All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/countrylanguages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countrylanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CountryLanguages - Create New",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"CountryCode\": \"TUR\",\r\n  \"Language\": \"Turkish\",\r\n  \"IsOfficial\": \"T\",\r\n  \"Percentage\": 90.0\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/countrylanguages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countrylanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CountryLanguages - Update Existing",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"CountryCode\": \"TUR\",\r\n  \"Language\": \"Kurdish\",\r\n  \"IsOfficial\": \"F\",\r\n  \"Percentage\": 10.0\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8085/countrylanguages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countrylanguages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CountryLanguages - Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8085/countrylanguages?CountryCode=TUR&Language=Turkish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"countrylanguages"
+							],
+							"query": [
+								{
+									"key": "CountryCode",
+									"value": "TUR"
+								},
+								{
+									"key": "Language",
+									"value": "Turkish"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
