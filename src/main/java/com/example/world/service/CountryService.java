@@ -3,6 +3,7 @@ package com.example.world.service;
 import com.example.world.model.Country;
 import com.example.world.repository.CountryRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public class CountryService {
         return countryRepository.tumUlkeleriGetir();
     }
 
-    public void ulkeEkle(Country country) {
+    public void ulkeEkle(Country country) throws SQLException {
         countryRepository.ulkeEkle(country);
     }
 

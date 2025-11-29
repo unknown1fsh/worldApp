@@ -1,5 +1,7 @@
 package com.example.world.model;
 
+import java.sql.ResultSet;
+
 public class Country {
     private String code;
     private String name;
@@ -33,6 +35,27 @@ public class Country {
         this.headOfState = headOfState;
         this.capital = capital;
         this.code2 = code2;
+    }
+    
+    // Null-safe constructor for ResultSet
+    public static Country fromResultSet(ResultSet rs) throws java.sql.SQLException {
+        return new Country(
+            rs.getString("Code"),
+            rs.getString("Name"),
+            rs.getString("Continent"),
+            rs.getString("Region"),
+            rs.getDouble("SurfaceArea"),
+            rs.getObject("IndepYear") != null ? rs.getInt("IndepYear") : null,
+            rs.getInt("Population"),
+            rs.getObject("LifeExpectancy") != null ? rs.getDouble("LifeExpectancy") : null,
+            rs.getObject("GNP") != null ? rs.getDouble("GNP") : null,
+            rs.getObject("GNPOld") != null ? rs.getDouble("GNPOld") : null,
+            rs.getString("LocalName"),
+            rs.getString("GovernmentForm"),
+            rs.getString("HeadOfState"),
+            rs.getObject("Capital") != null ? rs.getInt("Capital") : null,
+            rs.getString("Code2")
+        );
     }
 
     // Getters and Setters

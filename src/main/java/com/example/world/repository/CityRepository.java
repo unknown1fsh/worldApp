@@ -1,5 +1,6 @@
 package com.example.world.repository;
 
+import com.example.world.config.DatabaseConnection;
 import com.example.world.model.City;
 
 import java.sql.*;
@@ -8,13 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class CityRepository {
-    private final String url = "jdbc:mysql://localhost:3306/world";
-    private final String user = "root"; // Veritabanı kullanıcı adı
-    private final String password = "12345"; // Veritabanı şifresi
 
     public List<City> tumSehirleriGetir() {
         List<City> sehirler = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM city")) {
 
@@ -29,13 +27,14 @@ public class CityRepository {
                 sehirler.add(sehir);
             }
         } catch (SQLException e) {
+            System.err.println("Şehirler getirilirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return sehirler;
     }
 
-    public void sehirEkle(City sehir) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+    public void sehirEkle(City sehir) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO city (ID, Name, CountryCode, District, Population) VALUES (?, ?, ?, ?, ?)")) {
 
@@ -45,13 +44,11 @@ public class CityRepository {
             preparedStatement.setString(4, sehir.getDistrict());
             preparedStatement.setInt(5, sehir.getPopulation());
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     public Optional<City> sehirGetir(int id) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT * FROM city WHERE ID = ?")) {
 
@@ -67,13 +64,14 @@ public class CityRepository {
                 ));
             }
         } catch (SQLException e) {
+            System.err.println("Şehir getirilirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return Optional.empty();
     }
 
     public boolean sehirGuncelle(City sehir) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE city SET Name = ?, CountryCode = ?, District = ?, Population = ? WHERE ID = ?")) {
 
@@ -85,36 +83,59 @@ public class CityRepository {
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
+            System.err.println("Şehir güncellenirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
 
     public boolean sehirSil(Integer id, String name, String countryCode, String district, Integer population) {
-        StringBuilder query = new StringBuilder("DELETE FROM city WHERE 1=1");
-
+        List<String> conditions = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        
         if (id != null) {
-            query.append(" AND ID = ").append(id);
+            conditions.add("ID = ?");
+            params.add(id);
         }
         if (name != null) {
-            query.append(" AND Name = '").append(name).append("'");
+            conditions.add("Name = ?");
+            params.add(name);
         }
         if (countryCode != null) {
-            query.append(" AND CountryCode = '").append(countryCode).append("'");
+            conditions.add("CountryCode = ?");
+            params.add(countryCode);
         }
         if (district != null) {
-            query.append(" AND District = '").append(district).append("'");
+            conditions.add("District = ?");
+            params.add(district);
         }
         if (population != null) {
-            query.append(" AND Population = ").append(population);
+            conditions.add("Population = ?");
+            params.add(population);
         }
-
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             Statement statement = connection.createStatement()) {
-
-            int affectedRows = statement.executeUpdate(query.toString());
+        
+        if (conditions.isEmpty()) {
+            return false;
+        }
+        
+        String query = "DELETE FROM city WHERE " + String.join(" AND ", conditions);
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof Integer) {
+                    preparedStatement.setInt(i + 1, (Integer) param);
+                } else if (param instanceof String) {
+                    preparedStatement.setString(i + 1, (String) param);
+                }
+            }
+            
+            int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
+            System.err.println("Şehir silinirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -122,28 +143,48 @@ public class CityRepository {
 
     public List<City> searchCities(Integer id, String name, String countryCode, String district, Integer population) {
         List<City> sehirler = new ArrayList<>();
-        StringBuilder query = new StringBuilder("SELECT * FROM city WHERE 1=1");
-
+        List<String> conditions = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        
         if (id != null) {
-            query.append(" AND ID = ").append(id);
+            conditions.add("ID = ?");
+            params.add(id);
         }
         if (name != null) {
-            query.append(" AND Name = '").append(name).append("'");
+            conditions.add("Name = ?");
+            params.add(name);
         }
         if (countryCode != null) {
-            query.append(" AND CountryCode = '").append(countryCode).append("'");
+            conditions.add("CountryCode = ?");
+            params.add(countryCode);
         }
         if (district != null) {
-            query.append(" AND District = '").append(district).append("'");
+            conditions.add("District = ?");
+            params.add(district);
         }
         if (population != null) {
-            query.append(" AND Population = ").append(population);
+            conditions.add("Population = ?");
+            params.add(population);
         }
-
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query.toString())) {
-
+        
+        String query = "SELECT * FROM city";
+        if (!conditions.isEmpty()) {
+            query += " WHERE " + String.join(" AND ", conditions);
+        }
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof Integer) {
+                    preparedStatement.setInt(i + 1, (Integer) param);
+                } else if (param instanceof String) {
+                    preparedStatement.setString(i + 1, (String) param);
+                }
+            }
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 City sehir = new City(
                         resultSet.getInt("ID"),
@@ -155,6 +196,7 @@ public class CityRepository {
                 sehirler.add(sehir);
             }
         } catch (SQLException e) {
+            System.err.println("Şehirler aranırken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return sehirler;

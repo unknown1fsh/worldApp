@@ -1,326 +1,253 @@
--------
-ENGLISH
--------
+# 🌍 WorldApp - RESTful API
 
-# WorldApp Java Project
+WorldApp, MySQL veritabanından şehirler, ülkeler ve diller hakkında bilgi yönetimi yapan modern bir Java RESTful API uygulamasıdır. Swagger UI ile tam dokümante edilmiş, güvenli ve profesyonel bir API sunar.
 
-## Description
+## ✨ Özellikler
 
-WorldApp is a comprehensive Java-based web application designed to manage and retrieve information about cities, countries, and languages from a MySQL database. The application leverages the Jetty web server and includes robust CRUD operations for managing city, country, and country language data.
+- 🚀 **RESTful API** - Modern REST standartlarına uygun API tasarımı
+- 📚 **Swagger UI** - İnteraktif API dokümantasyonu ve test arayüzü
+- 🔒 **Güvenlik** - SQL Injection koruması, PreparedStatement kullanımı
+- 🏗️ **Mimari** - Katmanlı mimari (Model-Repository-Service-Servlet)
+- 🌐 **CORS Desteği** - Frontend entegrasyonu için CORS header'ları
+- 📦 **JSON API** - Tüm endpoint'ler JSON formatında request/response
+- ✅ **Hata Yönetimi** - Kapsamlı hata yönetimi ve HTTP status kodları
 
-## Table of Contents
+## 🛠️ Teknolojiler
 
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-  - [Cities](#cities)
-  - [Countries](#countries)
-  - [CountryLanguages](#countrylanguages)
-- [Postman Collection](#postman-collection)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
+- **Java 8+** - Programlama dili
+- **Maven** - Build ve dependency yönetimi
+- **Jetty** - Embedded web server
+- **MySQL** - Veritabanı
+- **Swagger UI** - API dokümantasyonu
+- **OpenAPI 3.0** - API spesifikasyonu
 
-## Project Structure
+## 📋 Gereksinimler
 
-- **Main.java**: The entry point of the application.
-- **model package**: Contains data model classes:
-  - `City.java`: Represents the City entity.
-  - `Country.java`: Represents the Country entity.
-  - `CountryLanguage.java`: Represents the CountryLanguage entity.
-- **repository package**: Contains repository classes for database interactions:
-  - `CityRepository.java`: Handles database operations for the City entity.
-  - `CountryRepository.java`: Handles database operations for the Country entity.
-  - `CountryLanguageRepository.java`: Handles database operations for the CountryLanguage entity.
-- **service package**: Contains service classes to handle business logic:
-  - `CityService.java`: Provides business logic for city-related operations.
-  - `CountryService.java`: Provides business logic for country-related operations.
-  - `CountryLanguageService.java`: Provides business logic for country language-related operations.
-- **servlet package**: Contains servlet classes for handling HTTP requests and responses:
-  - `CityServlet.java`: Manages HTTP operations for city data.
-  - `CountryServlet.java`: Manages HTTP operations for country data.
-  - `CountryLanguageServlet.java`: Manages HTTP operations for country language data.
-- **JettyServer.java**: Configures and starts the Jetty server.
+- Java Development Kit (JDK) 8 veya üzeri
+- Maven 3.6+
+- MySQL 8.0+ (world veritabanı ile)
 
-## Features
+## 🚀 Kurulum
 
-- CRUD operations for managing cities, countries, and country languages.
-- RESTful API endpoints for seamless integration.
-- MySQL database integration for persistent data storage.
-- Comprehensive error handling and validation.
-- Modular and extensible codebase for easy maintenance and scalability.
+### 1. Projeyi Klonlayın
 
-## Technologies Used
-
-- **Java**: Core programming language.
-- **Jetty**: Web server for handling HTTP requests.
-- **MySQL**: Database for data storage.
-- **Maven**: Build and dependency management tool.
-- **Postman**: API testing tool.
-
-## Installation
-
-### Prerequisites
-
-- Java Development Kit (JDK) 8 or higher
-- Maven
-- MySQL
-
-### Steps
-
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/your-username/worldApp.git
-   cd worldApp
-   ```
-
-2. **Configure the MySQL database:**
-   - Create a database named `world`.
-   - Use the provided SQL scripts to create the necessary tables and populate them with sample data.
-
-3. **Update database connection settings:**
-   - Open `src/main/resources/application.properties`.
-   - Update the MySQL connection details (username, password, URL).
-
-4. **Build the project:**
-   ```sh
-   mvn clean install
-   ```
-
-5. **Run the application:**
-   ```sh
-   mvn exec:java -Dexec.mainClass="com.example.world.JettyServer"
-   ```
-
-## Configuration
-
-Update the database connection settings in `src/main/resources/application.properties`:
-
-```properties
-db.url=jdbc:mysql://localhost:3306/world
-db.username=root
-db.password=password
+```bash
+git clone https://github.com/your-username/worldApp.git
+cd worldApp
 ```
 
-## Usage
+### 2. Veritabanını Yapılandırın
 
-The application provides the following RESTful API endpoints to interact with the database.
+MySQL'in default `world` veritabanını kullanın veya yeni bir veritabanı oluşturun:
 
-## API Endpoints
-
-### Cities
-
-- **GET /cities**: Retrieve all cities or filter by attributes.
-- **POST /cities**: Add a new city.
-- **PUT /cities**: Update an existing city.
-- **DELETE /cities**: Delete a city based on criteria.
-
-### Countries
-
-- **GET /countries**: Retrieve all countries or filter by attributes.
-- **POST /countries**: Add a new country.
-- **PUT /countries**: Update an existing country.
-- **DELETE /countries**: Delete a country based on criteria.
-
-### CountryLanguages
-
-- **GET /countrylanguages**: Retrieve all country languages or filter by attributes.
-- **POST /countrylanguages**: Add a new country language.
-- **PUT /countrylanguages**: Update an existing country language.
-- **DELETE /countrylanguages**: Delete a country language based on criteria.
-
-## Postman Collection
-
-A Postman collection file (`WorldApp.postman_collection.json`) is provided for testing all endpoints. To import the collection:
-
-1. Open Postman.
-2. Click the `Import` button.
-3. Select the provided JSON file and import.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the project's coding standards and write clear, concise commit messages.
-
-### Steps to Contribute
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add new feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Create a new pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Author
-
-[SELİM SERCAN ÇINAR](https://github.com/unknown1fsh)
-
--------
-TURKISH
--------
-# WorldApp Java Projesi
-
-## Açıklama
-
-WorldApp, MySQL veritabanından şehirler, ülkeler ve diller hakkında bilgi yönetimi ve sorgulama işlemleri yapan kapsamlı bir Java tabanlı web uygulamasıdır. Uygulama, Jetty web sunucusunu kullanır ve şehir, ülke ve ülke dili verilerini yönetmek için sağlam CRUD işlemleri içerir.
-
-## İçindekiler
-
-- [Proje Yapısı](#proje-yapısı)
-- [Özellikler](#özellikler)
-- [Kullanılan Teknolojiler](#kullanılan-teknolojiler)
-- [Kurulum](#kurulum)
-- [Yapılandırma](#yapılandırma)
-- [Kullanım](#kullanım)
-- [API Uç Noktaları](#api-uç-noktaları)
-  - [Şehirler](#şehirler)
-  - [Ülkeler](#ülkeler)
-  - [Ülke Dilleri](#ülke-dilleri)
-- [Postman Koleksiyonu](#postman-koleksiyonu)
-- [Katkıda Bulunma](#katkıda-bulunma)
-- [Lisans](#lisans)
-- [Yazar](#yazar)
-
-## Proje Yapısı
-
-- **Main.java**: Uygulamanın giriş noktası.
-- **model package**: Veri model sınıflarını içerir:
-  - `City.java`: Şehir varlığını temsil eder.
-  - `Country.java`: Ülke varlığını temsil eder.
-  - `CountryLanguage.java`: Ülke dili varlığını temsil eder.
-- **repository package**: Veritabanı etkileşimleri için repository sınıflarını içerir:
-  - `CityRepository.java`: Şehir varlığı için veritabanı işlemlerini yönetir.
-  - `CountryRepository.java`: Ülke varlığı için veritabanı işlemlerini yönetir.
-  - `CountryLanguageRepository.java`: Ülke dili varlığı için veritabanı işlemlerini yönetir.
-- **service package**: İş mantığını yönetmek için servis sınıflarını içerir:
-  - `CityService.java`: Şehirle ilgili işlemler için iş mantığını sağlar.
-  - `CountryService.java`: Ülkeyle ilgili işlemler için iş mantığını sağlar.
-  - `CountryLanguageService.java`: Ülke diliyle ilgili işlemler için iş mantığını sağlar.
-- **servlet package**: HTTP istek ve yanıtlarını yönetmek için servlet sınıflarını içerir:
-  - `CityServlet.java`: Şehir verileri için HTTP işlemlerini yönetir.
-  - `CountryServlet.java`: Ülke verileri için HTTP işlemlerini yönetir.
-  - `CountryLanguageServlet.java`: Ülke dili verileri için HTTP işlemlerini yönetir.
-- **JettyServer.java**: Jetty sunucusunu yapılandırır ve başlatır.
-
-## Özellikler
-
-- Şehirler, ülkeler ve ülke dilleri için CRUD işlemleri.
-- Sorunsuz entegrasyon için RESTful API uç noktaları.
-- Kalıcı veri depolama için MySQL veritabanı entegrasyonu.
-- Kapsamlı hata yönetimi ve doğrulama.
-- Kolay bakım ve ölçeklenebilirlik için modüler ve genişletilebilir kod tabanı.
-
-## Kullanılan Teknolojiler
-
-- **Java**: Ana programlama dili.
-- **Jetty**: HTTP isteklerini işlemek için web sunucusu.
-- **MySQL**: Veri depolama için veritabanı.
-- **Maven**: Proje ve bağımlılık yönetim aracı.
-- **Postman**: API test aracı.
-
-## Kurulum
-
-### Gereksinimler
-
-- Java Development Kit (JDK) 8 veya daha üstü
-- Maven
-- MySQL
-
-### Adımlar
-
-1. **Depoyu klonlayın:**
-   ```sh
-   git clone https://github.com/your-username/worldApp.git
-   cd worldApp
-   ```
-
-2. **MySQL veritabanını yapılandırın:**
-   - `world` adında bir veritabanı oluşturun.
-   - Gerekli tabloları oluşturmak ve örnek verilerle doldurmak için sağlanan SQL betiklerini kullanın.
-
-3. **Veritabanı bağlantı ayarlarını güncelleyin:**
-   - `src/main/resources/application.properties` dosyasını açın.
-   - MySQL bağlantı detaylarını (kullanıcı adı, şifre, URL) güncelleyin.
-
-4. **Projeyi derleyin:**
-   ```sh
-   mvn clean install
-   ```
-
-5. **Uygulamayı çalıştırın:**
-   ```sh
-   mvn exec:java -Dexec.mainClass="com.example.world.JettyServer"
-   ```
-
-## Yapılandırma
-
-`src/main/resources/application.properties` dosyasındaki veritabanı bağlantı ayarlarını güncelleyin:
-
-```properties
-db.url=jdbc:mysql://localhost:3306/world
-db.username=root
-db.password=password
+```sql
+CREATE DATABASE IF NOT EXISTS world;
 ```
 
-## Kullanım
+Veritabanı bağlantı bilgileri `DatabaseConnection.java` dosyasında yapılandırılmıştır:
+- **URL**: `jdbc:mysql://localhost:3306/world`
+- **Kullanıcı**: `root`
+- **Şifre**: `12345`
 
-Uygulama, veritabanıyla etkileşimde bulunmak için aşağıdaki RESTful API uç noktalarını sağlar.
+> ⚠️ **Not**: Üretim ortamında şifreyi değiştirmeyi unutmayın!
 
-## API Uç Noktaları
+### 3. Projeyi Derleyin
 
-### Şehirler
+```bash
+mvn clean install
+```
 
-- **GET /cities**: Tüm şehirleri alın veya özelliklere göre filtreleyin.
-- **POST /cities**: Yeni bir şehir ekleyin.
-- **PUT /cities**: Mevcut bir şehri güncelleyin.
-- **DELETE /cities**: Belirli kriterlere göre bir şehri silin.
+### 4. Uygulamayı Çalıştırın
 
-### Ülkeler
+```bash
+mvn exec:java
+```
 
-- **GET /countries**: Tüm ülkeleri alın veya özelliklere göre filtreleyin.
-- **POST /countries**: Yeni bir ülke ekleyin.
-- **PUT /countries**: Mevcut bir ülkeyi güncelleyin.
-- **DELETE /countries**: Belirli kriterlere göre bir ülkeyi silin.
+Sunucu `http://localhost:8085` adresinde başlatılacaktır.
 
-### Ülke Dilleri
+## 📖 Kullanım
 
-- **GET /countrylanguages**: Tüm ülke dillerini alın veya özelliklere göre filtreleyin.
-- **POST /countrylanguages**: Yeni bir ülke dili ekleyin.
-- **PUT /countrylanguages**: Mevcut bir ülke dilini güncelleyin.
-- **DELETE /countrylanguages**: Belirli kriterlere göre bir ülke dilini silin.
+### API Dokümantasyonu
 
-## Postman Koleksiyonu
+Swagger UI ile API'yi keşfedin ve test edin:
 
-Tüm uç noktaları test etmek için bir Postman koleksiyon dosyası (`WorldApp.postman_collection.json`) sağlanmıştır. Koleksiyonu içe aktarmak için:
+- **Swagger UI**: http://localhost:8085/swagger
+- **OpenAPI Spec**: http://localhost:8085/openapi.json
+- **Ana Sayfa**: http://localhost:8085/
 
-1. Postman'i açın.
-2. `Import` butonuna tıklayın.
-3. Sağlanan JSON dosyasını seçin ve içe aktarın.
+### API Endpoint'leri
 
-## Katkıda Bulunma
+#### 🏙️ Şehirler (`/cities`)
 
-Katkılar memnuniyetle karşılanır! Lütfen depoyu fork edin ve değişikliklerinizle bir pull request oluşturun. Projenin kodlama standartlarına uyduğunuzdan ve açık, özlü commit mesajları yazdığınızdan emin olun.
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/cities` | Tüm şehirleri listele veya filtrele |
+| POST | `/cities` | Yeni şehir ekle |
+| PUT | `/cities` | Şehir güncelle |
+| DELETE | `/cities?ID={id}` | Şehir sil |
 
-### Katkıda Bulunma Adımları
+**Örnek Request (POST):**
+```json
+{
+  "ID": 5000,
+  "Name": "İstanbul",
+  "CountryCode": "TUR",
+  "District": "İstanbul",
+  "Population": 15000000
+}
+```
 
-1. Depoyu fork edin.
-2. Yeni bir dal oluşturun (`git checkout -b feature-branch`).
-3. Değişikliklerinizi yapın.
-4. Değişikliklerinizi commit edin (`git commit -m 'Yeni özellik ekle'`).
-5. Dalınıza push edin (`git push origin feature-branch`).
-6. Yeni bir pull request oluşturun.
+#### 🌎 Ülkeler (`/countries`)
 
-## Lisans
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/countries` | Tüm ülkeleri listele veya filtrele |
+| POST | `/countries` | Yeni ülke ekle |
+| PUT | `/countries` | Ülke güncelle |
+| DELETE | `/countries?Code={code}` | Ülke sil |
 
-Bu proje MIT Lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+**Örnek Request (POST):**
+```json
+{
+  "Code": "TUR",
+  "Name": "Turkey",
+  "Continent": "Asia",
+  "Region": "Middle East",
+  "SurfaceArea": 783356,
+  "IndepYear": 1923,
+  "Population": 82000000,
+  "LifeExpectancy": 75.8,
+  "GNP": 851300.0,
+  "GNPOld": 800000.0,
+  "LocalName": "Türkiye",
+  "GovernmentForm": "Republic",
+  "HeadOfState": "Recep Tayyip Erdoğan",
+  "Capital": 1,
+  "Code2": "TR"
+}
+```
 
-## Yazar
+#### 🗣️ Ülke Dilleri (`/countrylanguages`)
 
-[SELİM SERCAN ÇINAR](https://github.com/unknown1fsh)
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/countrylanguages` | Tüm dilleri listele veya filtrele |
+| POST | `/countrylanguages` | Yeni dil ekle |
+| PUT | `/countrylanguages` | Dil güncelle |
+| DELETE | `/countrylanguages?CountryCode={code}&Language={lang}` | Dil sil |
+
+**Örnek Request (POST):**
+```json
+{
+  "CountryCode": "TUR",
+  "Language": "Turkish",
+  "IsOfficial": "T",
+  "Percentage": 90.0
+}
+```
+
+## 🏗️ Proje Yapısı
+
+```
+worldApp/
+├── src/main/java/com/example/world/
+│   ├── config/
+│   │   └── DatabaseConnection.java      # Merkezi veritabanı bağlantı yönetimi
+│   ├── model/
+│   │   ├── City.java                     # Şehir modeli
+│   │   ├── Country.java                  # Ülke modeli
+│   │   └── CountryLanguage.java          # Ülke dili modeli
+│   ├── repository/
+│   │   ├── CityRepository.java           # Şehir veritabanı işlemleri
+│   │   ├── CountryRepository.java        # Ülke veritabanı işlemleri
+│   │   └── CountryLanguageRepository.java # Dil veritabanı işlemleri
+│   ├── service/
+│   │   ├── CityService.java              # Şehir iş mantığı
+│   │   ├── CountryService.java           # Ülke iş mantığı
+│   │   └── CountryLanguageService.java   # Dil iş mantığı
+│   ├── servlet/
+│   │   ├── CityServlet.java              # Şehir REST endpoint'leri
+│   │   ├── CountryServlet.java           # Ülke REST endpoint'leri
+│   │   ├── CountryLanguageServlet.java   # Dil REST endpoint'leri
+│   │   ├── WelcomeServlet.java           # Ana sayfa
+│   │   ├── SwaggerUIServlet.java         # Swagger UI
+│   │   └── OpenApiServlet.java           # OpenAPI spec
+│   └── JettyServer.java                  # Sunucu başlatma
+├── pom.xml                               # Maven yapılandırması
+└── README.md                             # Bu dosya
+```
+
+## 🔧 Yapılandırma
+
+### Veritabanı Bağlantısı
+
+Veritabanı bağlantı ayarlarını değiştirmek için `src/main/java/com/example/world/config/DatabaseConnection.java` dosyasını düzenleyin:
+
+```java
+private static final String URL = "jdbc:mysql://localhost:3306/world";
+private static final String USER = "root";
+private static final String PASSWORD = "12345";
+```
+
+### Port Değiştirme
+
+Sunucu portunu değiştirmek için `JettyServer.java` dosyasında:
+
+```java
+Server server = new Server(8085); // Port numarasını değiştirin
+```
+
+## 🧪 Test Etme
+
+### Swagger UI ile Test
+
+1. Sunucuyu başlatın: `mvn exec:java`
+2. Tarayıcıda http://localhost:8085/swagger adresine gidin
+3. Endpoint'leri keşfedin ve "Try it out" butonunu kullanarak test edin
+
+### cURL ile Test
+
+```bash
+# Şehirleri listele
+curl http://localhost:8085/cities
+
+# Yeni şehir ekle
+curl -X POST http://localhost:8085/cities \
+  -H "Content-Type: application/json" \
+  -d '{"ID":5000,"Name":"İstanbul","CountryCode":"TUR","District":"İstanbul","Population":15000000}'
+```
+
+## 🔒 Güvenlik
+
+- ✅ SQL Injection koruması (PreparedStatement kullanımı)
+- ✅ Input validation
+- ✅ CORS header'ları
+- ✅ Hata mesajlarında hassas bilgi sızıntısı yok
+
+## 📝 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 👤 Yazar
+
+**SELİM SERCAN ÇINAR**
+
+- GitHub: [@unknown1fsh](https://github.com/unknown1fsh)
+
+## 🤝 Katkıda Bulunma
+
+Katkılarınızı memnuniyetle karşılıyoruz! Lütfen:
+
+1. Fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit edin (`git commit -m 'Add some amazing feature'`)
+4. Push edin (`git push origin feature/amazing-feature`)
+5. Pull Request açın
+
+## 📞 Destek
+
+Sorularınız veya önerileriniz için issue açabilirsiniz.
+
+---
+
+⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!

@@ -3,6 +3,7 @@ package com.example.world.service;
 import com.example.world.model.City;
 import com.example.world.repository.CityRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public class CityService {
         return cityRepository.tumSehirleriGetir();
     }
 
-    public void sehirEkle(City sehir) {
+    public void sehirEkle(City sehir) throws SQLException {
         cityRepository.sehirEkle(sehir);
     }
 

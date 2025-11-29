@@ -1,5 +1,6 @@
 package com.example.world.repository;
 
+import com.example.world.config.DatabaseConnection;
 import com.example.world.model.CountryLanguage;
 
 import java.sql.*;
@@ -8,13 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class CountryLanguageRepository {
-    private final String url = "jdbc:mysql://localhost:3306/world";
-    private final String user = "root"; // Veritabanı kullanıcı adı
-    private final String password = "12345"; // Veritabanı şifresi
 
     public List<CountryLanguage> tumCountryLanguageGetir() {
         List<CountryLanguage> countryLanguages = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM countrylanguage")) {
 
@@ -28,13 +26,14 @@ public class CountryLanguageRepository {
                 countryLanguages.add(countryLanguage);
             }
         } catch (SQLException e) {
+            System.err.println("Ülke dilleri getirilirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return countryLanguages;
     }
 
-    public void ulkeDiliEkle(CountryLanguage countryLanguage) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+    public void ulkeDiliEkle(CountryLanguage countryLanguage) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO countrylanguage (CountryCode, Language, IsOfficial, Percentage) VALUES (?, ?, ?, ?)")) {
 
@@ -43,13 +42,11 @@ public class CountryLanguageRepository {
             preparedStatement.setString(3, countryLanguage.getIsOfficial());
             preparedStatement.setDouble(4, countryLanguage.getPercentage());
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
     public Optional<CountryLanguage> ulkeDiliGetir(String countryCode, String language) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT * FROM countrylanguage WHERE CountryCode = ? AND Language = ?")) {
 
@@ -65,13 +62,14 @@ public class CountryLanguageRepository {
                 ));
             }
         } catch (SQLException e) {
+            System.err.println("Ülke dili getirilirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return Optional.empty();
     }
 
     public boolean ulkeDiliGuncelle(CountryLanguage countryLanguage) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE countrylanguage SET IsOfficial = ?, Percentage = ? WHERE CountryCode = ? AND Language = ?")) {
 
@@ -82,33 +80,55 @@ public class CountryLanguageRepository {
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
+            System.err.println("Ülke dili güncellenirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
 
     public boolean ulkeDiliSil(String countryCode, String language, String isOfficial, Double percentage) {
-        StringBuilder query = new StringBuilder("DELETE FROM countrylanguage WHERE 1=1");
-
+        List<String> conditions = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        
         if (countryCode != null) {
-            query.append(" AND CountryCode = '").append(countryCode).append("'");
+            conditions.add("CountryCode = ?");
+            params.add(countryCode);
         }
         if (language != null) {
-            query.append(" AND Language = '").append(language).append("'");
+            conditions.add("Language = ?");
+            params.add(language);
         }
         if (isOfficial != null) {
-            query.append(" AND IsOfficial = '").append(isOfficial).append("'");
+            conditions.add("IsOfficial = ?");
+            params.add(isOfficial);
         }
         if (percentage != null) {
-            query.append(" AND Percentage = ").append(percentage);
+            conditions.add("Percentage = ?");
+            params.add(percentage);
         }
-
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             Statement statement = connection.createStatement()) {
-
-            int affectedRows = statement.executeUpdate(query.toString());
+        
+        if (conditions.isEmpty()) {
+            return false;
+        }
+        
+        String query = "DELETE FROM countrylanguage WHERE " + String.join(" AND ", conditions);
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof Double) {
+                    preparedStatement.setDouble(i + 1, (Double) param);
+                } else if (param instanceof String) {
+                    preparedStatement.setString(i + 1, (String) param);
+                }
+            }
+            
+            int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
+            System.err.println("Ülke dili silinirken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -116,25 +136,44 @@ public class CountryLanguageRepository {
 
     public List<CountryLanguage> searchCountryLanguages(String countryCode, String language, String isOfficial, Double percentage) {
         List<CountryLanguage> countryLanguages = new ArrayList<>();
-        StringBuilder query = new StringBuilder("SELECT * FROM countrylanguage WHERE 1=1");
-
+        List<String> conditions = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+        
         if (countryCode != null) {
-            query.append(" AND CountryCode = '").append(countryCode).append("'");
+            conditions.add("CountryCode = ?");
+            params.add(countryCode);
         }
         if (language != null) {
-            query.append(" AND Language = '").append(language).append("'");
+            conditions.add("Language = ?");
+            params.add(language);
         }
         if (isOfficial != null) {
-            query.append(" AND IsOfficial = '").append(isOfficial).append("'");
+            conditions.add("IsOfficial = ?");
+            params.add(isOfficial);
         }
         if (percentage != null) {
-            query.append(" AND Percentage = ").append(percentage);
+            conditions.add("Percentage = ?");
+            params.add(percentage);
         }
-
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query.toString())) {
-
+        
+        String query = "SELECT * FROM countrylanguage";
+        if (!conditions.isEmpty()) {
+            query += " WHERE " + String.join(" AND ", conditions);
+        }
+        
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof Double) {
+                    preparedStatement.setDouble(i + 1, (Double) param);
+                } else if (param instanceof String) {
+                    preparedStatement.setString(i + 1, (String) param);
+                }
+            }
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 CountryLanguage countryLanguage = new CountryLanguage(
                         resultSet.getString("CountryCode"),
@@ -145,6 +184,7 @@ public class CountryLanguageRepository {
                 countryLanguages.add(countryLanguage);
             }
         } catch (SQLException e) {
+            System.err.println("Ülke dilleri aranırken hata: " + e.getMessage());
             e.printStackTrace();
         }
         return countryLanguages;

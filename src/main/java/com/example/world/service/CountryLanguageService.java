@@ -3,6 +3,7 @@ package com.example.world.service;
 import com.example.world.model.CountryLanguage;
 import com.example.world.repository.CountryLanguageRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public class CountryLanguageService {
         return countryLanguageRepository.tumCountryLanguageGetir();
     }
 
-    public void ulkeDiliEkle(CountryLanguage countryLanguage) {
+    public void ulkeDiliEkle(CountryLanguage countryLanguage) throws SQLException {
         countryLanguageRepository.ulkeDiliEkle(countryLanguage);
     }
 
