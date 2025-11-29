@@ -230,8 +230,6 @@ Bu proje MIT lisansı altında lisanslanmıştır.
 
 ## 👤 Yazar
 
-**SELİM SERCAN ÇINAR**
-
 - GitHub: [@unknown1fsh](https://github.com/unknown1fsh)
 
 ## 🤝 Katkıda Bulunma
